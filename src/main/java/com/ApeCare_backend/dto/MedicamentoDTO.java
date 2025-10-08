@@ -2,10 +2,14 @@ package com.ApeCare_backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 
 @Data
-
+@Service
+@RequiredArgsConstructor
 public class MedicamentoDTO {
 
     private Long id;
