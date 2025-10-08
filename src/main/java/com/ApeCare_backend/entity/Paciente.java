@@ -22,7 +22,7 @@ public class Paciente {
     @Column(name = TablaNombre.Nombre)
     private String nombre;
 
-    @Column(name = TablaNombre.Cedula)
+    @Column(name = TablaNombre.Cedula, unique = true)
     private String cedula;
 
     @Column(name = TablaNombre.NumeroCarnet)
