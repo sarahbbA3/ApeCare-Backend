@@ -1,0 +1,27 @@
+package com.ApeCare_backend.mapper;
+
+import com.ApeCare_backend.dto.TandaLaborDTO;
+import com.ApeCare_backend.entity.Estado;
+import com.ApeCare_backend.entity.TandaLabor;
+
+public class TandaLaborMapper {
+
+    public static TandaLaborDTO toDTO(TandaLabor tanda) {
+        TandaLaborDTO dto = new TandaLaborDTO();
+        dto.setId(tanda.getId());
+        dto.setNombre(tanda.getNombre());
+        dto.setDescripcion(tanda.getDescripcion());
+        dto.setFechaCreacion(tanda.getFechaCreacion().toLocalDate());
+        return dto;
+    }
+
+    public static TandaLabor toEntity(TandaLaborDTO dto, Estado estado) {
+        TandaLabor tanda = new TandaLabor();
+        tanda.setId(dto.getId());
+        tanda.setNombre(dto.getNombre());
+        tanda.setDescripcion(dto.getDescripcion());
+        tanda.setEstado(estado);
+        return tanda;
+    }
+
+}
