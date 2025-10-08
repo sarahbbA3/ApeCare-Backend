@@ -33,7 +33,6 @@ public class DataLoader implements CommandLineRunner {
                 eliminado.setNombre(EstadoConst.ELIMINADO);
                 eliminado.setDescripcion("Registro eliminado");
                 estadoRepo.save(eliminado);
-
             }
         }
 }
