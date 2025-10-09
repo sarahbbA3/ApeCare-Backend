@@ -27,6 +27,12 @@ public class TipoFarmacoController {
         return ResponseEntity.ok(tipoFarmacoService.listarActivos());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<TipoFarmacoDTO> editar(@PathVariable Long id, @RequestBody TipoFarmacoDTO dto) {
+        dto.setId(id);
+        return ResponseEntity.ok(tipoFarmacoService.editar(dto));
+    }
+
     @PutMapping("/{id}/estado/{estadoId}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id, @PathVariable Long estadoId) {
         tipoFarmacoService.eliminar(id, estadoId);

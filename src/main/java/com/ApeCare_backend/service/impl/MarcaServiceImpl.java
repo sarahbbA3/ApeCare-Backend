@@ -36,6 +36,20 @@ public class MarcaServiceImpl implements MarcaService {
     }
 
     @Override
+    public MarcaDTO editar(MarcaDTO dto) {
+        Marca existente = marcaRepo.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Marca no encontrada"));
+        Estado estado = estadoRepo.findById(dto.getEstadoId())
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+
+        existente.setNombre(dto.getNombre());
+        existente.setDescripcion(dto.getDescripcion());
+        existente.setEstado(estado);
+
+        return MarcaMapper.toDTO(marcaRepo.save(existente));
+    }
+
+    @Override
     public void eliminar(Long id, Long estadoId) {
         Marca marca = marcaRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Marca no encontrada"));

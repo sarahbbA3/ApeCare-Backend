@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,6 +20,8 @@ public class RegistroVisitaDTO {
     private LocalTime horaVisita;
     private String recomendaciones;
     private LocalDate fechaRegistro;
+    private List<Long> sintomasIds;
+    private List<Long> medicamentosIds;
     private Long pacienteId;
     private Long medicoId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

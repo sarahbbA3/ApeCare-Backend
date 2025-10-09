@@ -8,6 +8,7 @@ public interface MedicoService {
 
     MedicoDTO crear(MedicoDTO dto);
     List<MedicoDTO> listarActivos();
+    MedicoDTO editar(Long id, MedicoDTO dto);
     void eliminar(Long id, Long estadoId);
 
 }

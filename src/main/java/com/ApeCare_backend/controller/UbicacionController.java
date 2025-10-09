@@ -27,6 +27,12 @@ public class UbicacionController {
         return ResponseEntity.ok(ubicacionService.listarActivos());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UbicacionDTO> editar(@PathVariable Long id, @RequestBody UbicacionDTO dto) {
+        dto.setId(id);
+        return ResponseEntity.ok(ubicacionService.editar(dto));
+    }
+
     @PutMapping("/{id}/estado/{estadoId}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id, @PathVariable Long estadoId) {
         ubicacionService.eliminar(id, estadoId);

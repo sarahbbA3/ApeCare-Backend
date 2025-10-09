@@ -27,6 +27,12 @@ public class MarcaController {
         return ResponseEntity.ok(marcaService.listarActivos());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<MarcaDTO> editar(@PathVariable Long id, @RequestBody MarcaDTO dto) {
+        dto.setId(id);
+        return ResponseEntity.ok(marcaService.editar(dto));
+    }
+
     @PutMapping("/{id}/estado/{estadoId}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id, @PathVariable Long estadoId) {
         marcaService.eliminar(id, estadoId);

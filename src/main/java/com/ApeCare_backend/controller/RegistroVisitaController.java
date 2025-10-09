@@ -3,6 +3,7 @@ package com.ApeCare_backend.controller;
 import com.ApeCare_backend.dto.RegistroVisitaDTO;
 import com.ApeCare_backend.service.RegistroVisitaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,11 @@ public class RegistroVisitaController {
     @GetMapping
     public List<RegistroVisitaDTO> listarActivos() {
         return service.listarActivos();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RegistroVisitaDTO> editar(@PathVariable Long id, @RequestBody RegistroVisitaDTO dto) {
+        return ResponseEntity.ok(service.editar(id, dto));
     }
 
     @PutMapping("/{id}/estado/{estadoId}")

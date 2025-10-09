@@ -8,6 +8,7 @@ public interface TandaLaborService {
 
     TandaLaborDTO crear(TandaLaborDTO dto);
     List<TandaLaborDTO> listarActivos();
+    TandaLaborDTO editar(Long id, TandaLaborDTO dto);
     void eliminar(Long id, Long estadoId);
 
 }

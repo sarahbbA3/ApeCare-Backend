@@ -3,6 +3,8 @@ package com.ApeCare_backend.controller;
 import com.ApeCare_backend.dto.SintomaDTO;
 import com.ApeCare_backend.service.SintomaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,14 @@ public class SintomaController {
     }
 
     @GetMapping
-    public List<SintomaDTO> listarActivos() {
-        return service.listarActivos();
+    public ResponseEntity<List<SintomaDTO>> listarActivos() {
+        return new ResponseEntity<>(service.listarActivos(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SintomaDTO> editar(@PathVariable Long id, @RequestBody SintomaDTO dto) {
+        dto.setId(id);
+        return ResponseEntity.ok(service.editar(dto));
     }
 
     @PutMapping("/{id}/estado/{estadoId}")

@@ -3,6 +3,7 @@ package com.ApeCare_backend.controller;
 import com.ApeCare_backend.dto.MedicoDTO;
 import com.ApeCare_backend.service.MedicoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,11 @@ public class MedicoController {
     @GetMapping
     public List<MedicoDTO> listarActivos() {
         return service.listarActivos();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MedicoDTO> editar(@PathVariable Long id, @RequestBody MedicoDTO dto) {
+        return ResponseEntity.ok(service.editar(id, dto));
     }
 
     @PutMapping("/{id}/estado/{estadoId}")

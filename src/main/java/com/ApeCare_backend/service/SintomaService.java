@@ -8,6 +8,7 @@ public interface SintomaService {
 
     SintomaDTO crear(SintomaDTO dto);
     List<SintomaDTO> listarActivos();
+    SintomaDTO editar(SintomaDTO dto);
     void eliminar(Long id, Long estadoId);
 
 }

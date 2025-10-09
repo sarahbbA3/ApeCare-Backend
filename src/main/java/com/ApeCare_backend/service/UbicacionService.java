@@ -8,6 +8,7 @@ public interface UbicacionService {
 
     UbicacionDTO crear(UbicacionDTO dto);
     List<UbicacionDTO> listarActivos();
+    UbicacionDTO editar(UbicacionDTO dto);
     void eliminar(Long id, Long estadoId);
 
 }

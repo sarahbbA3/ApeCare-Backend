@@ -39,6 +39,17 @@ public class TipoPacienteServiceImpl implements TipoPacienteService {
     }
 
     @Override
+    public TipoPacienteDTO editar(TipoPacienteDTO dto) {
+        TipoPaciente existente = tipoRepo.findById(dto.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de paciente no encontrado"));
+
+        existente.setNombre(dto.getNombre());
+        existente.setDescripcion(dto.getDescripcion());
+
+        return TipoPacienteMapper.toDTO(tipoRepo.save(existente));
+    }
+
+    @Override
     public void eliminar(Long id, Long estadoId) {
         TipoPaciente tipo = tipoRepo.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de paciente no encontrado"));
