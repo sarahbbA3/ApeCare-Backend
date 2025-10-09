@@ -3,6 +3,7 @@ package com.ApeCare_backend.controller;
 import com.ApeCare_backend.dto.EspecialidadDTO;
 import com.ApeCare_backend.service.EspecialidadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,11 @@ public class EspecialidadController {
     @GetMapping
     public List<EspecialidadDTO> listarActivos() {
         return service.listarActivos();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EspecialidadDTO> editar(@PathVariable Long id, @RequestBody EspecialidadDTO dto) {
+        return ResponseEntity.ok(service.editar(id, dto));
     }
 
     @PutMapping("/{id}/estado/{estadoId}")

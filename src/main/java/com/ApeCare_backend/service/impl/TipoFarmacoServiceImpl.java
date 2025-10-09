@@ -36,6 +36,21 @@ public class TipoFarmacoServiceImpl implements TipoFarmacoService {
     }
 
     @Override
+    public TipoFarmacoDTO editar(TipoFarmacoDTO dto) {
+        TipoFarmaco existente = tipoRepo.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Tipo de fármaco no encontrado"));
+
+        Estado estado = estadoRepo.findById(dto.getEstadoId())
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+
+        existente.setNombre(dto.getNombre());
+        existente.setDescripcion(dto.getDescripcion());
+        existente.setEstado(estado);
+
+        return TipoFarmacoMapper.toDTO(tipoRepo.save(existente));
+    }
+
+    @Override
     public void eliminar(Long id, Long estadoId) {
         TipoFarmaco tipo = tipoRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tipo de fármaco no encontrado"));

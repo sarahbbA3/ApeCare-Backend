@@ -35,6 +35,22 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
+    public UbicacionDTO editar(UbicacionDTO dto) {
+        Ubicacion existente = ubicacionRepo.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Ubicación no encontrada"));
+
+        Estado estado = estadoRepo.findById(dto.getEstadoId())
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+
+        existente.setEstante(dto.getEstante());
+        existente.setTramo(dto.getTramo());
+        existente.setCelda(dto.getCelda());
+        existente.setEstado(estado);
+
+        return UbicacionMapper.toDTO(ubicacionRepo.save(existente));
+    }
+
+    @Override
     public void eliminar(Long id, Long estadoId) {
         Ubicacion ubicacion = ubicacionRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ubicación no encontrada"));

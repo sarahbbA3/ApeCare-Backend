@@ -52,6 +52,32 @@ public class PacienteServiceImpl implements PacienteService {
                 .map(PacienteMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public PacienteDTO editar(Long id, PacienteDTO dto) {
+        Paciente existente = pacienteRepo.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
+
+        if (!ValidacionCedula.esCedulaValida(dto.getCedula())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cédula inválida");
+        }
+
+        if (!dto.getCedula().equals(existente.getCedula()) &&
+                pacienteRepo.findByCedula(dto.getCedula()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un paciente con esta cédula");
+        }
+
+        TipoPaciente tipo = tipoRepo.findById(dto.getTipoPacienteId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de paciente no encontrado"));
+
+        existente.setNombre(dto.getNombre());
+        existente.setCedula(dto.getCedula());
+        existente.setNumeroCarnet(dto.getNumeroCarnet());
+        existente.setTipoPaciente(tipo);
+
+        return PacienteMapper.toDTO(pacienteRepo.save(existente));
+    }
+
     @Override
     public void eliminar(Long id, Long estadoId) {
         Paciente paciente = pacienteRepo.findById(id).orElseThrow(() ->

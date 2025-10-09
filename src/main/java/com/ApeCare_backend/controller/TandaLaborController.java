@@ -3,6 +3,7 @@ package com.ApeCare_backend.controller;
 import com.ApeCare_backend.dto.TandaLaborDTO;
 import com.ApeCare_backend.service.TandaLaborService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,11 @@ public class TandaLaborController {
     @GetMapping
     public List<TandaLaborDTO> listarActivos() {
         return service.listarActivos();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TandaLaborDTO> editar(@PathVariable Long id, @RequestBody TandaLaborDTO dto) {
+        return ResponseEntity.ok(service.editar(id, dto));
     }
 
     @PutMapping("/{id}/estado/{estadoId}")

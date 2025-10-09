@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,14 +33,14 @@ public class RegistroVisita {
     private String recomendaciones;
 
     @OneToMany(mappedBy = "registroVisita", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RegistroVisitaSintoma> sintomas;
+    private List<RegistroVisitaSintoma> sintomas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "visita", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedicamentoSuministrado> medicamentosEntregados = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "PacienteId", foreignKey = @ForeignKey(name = "FK_RegistroVisita_Paciente"))
     private Paciente paciente;
-
-    @OneToMany(mappedBy = "visita", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MedicamentoSuministrado> medicamentosEntregados;
 
     @ManyToOne
     @JoinColumn(name = "MedicoId", foreignKey = @ForeignKey(name = "FK_RegistroVisita_Medico"))

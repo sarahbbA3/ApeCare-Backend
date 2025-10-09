@@ -8,6 +8,7 @@ public interface EspecialidadService {
 
     EspecialidadDTO crear(EspecialidadDTO dto);
     List<EspecialidadDTO> listarActivos();
+    EspecialidadDTO editar(Long id, EspecialidadDTO dto);
     void eliminar(Long id, Long estadoId);
 
 }

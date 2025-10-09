@@ -8,6 +8,7 @@ public interface TipoPacienteService {
 
     TipoPacienteDTO crear(TipoPacienteDTO dto);
     List<TipoPacienteDTO> listarActivos();
+    TipoPacienteDTO editar(TipoPacienteDTO dto);
     void eliminar(Long id, Long estadoId);
 
 }

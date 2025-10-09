@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +58,30 @@ public class MedicoServiceImpl implements MedicoService {
         return medicoRepo.findByEstadoNombreIgnoreCase("ACTIVO").stream()
                 .map(MedicoMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MedicoDTO editar(Long id, MedicoDTO dto) {
+        if (!ValidacionCedula.esCedulaValida(dto.getCedula())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cédula inválida");
+        }
+
+        Medico medico = medicoRepo.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Médico no encontrado"));
+
+        Especialidad especialidad = especialidadRepo.findById(dto.getEspecialidadId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Especialidad no encontrada"));
+
+        TandaLabor tanda = tandaRepo.findById(dto.getTandaLaborId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Tanda laboral no encontrada"));
+
+        medico.setNombre(dto.getNombre());
+        medico.setCedula(dto.getCedula());
+        medico.setEspecialidad(especialidad);
+        medico.setTandaLabor(tanda);
+        medico.setFechaCreacion(LocalDateTime.now());
+
+        return MedicoMapper.toDTO(medicoRepo.save(medico));
     }
 
     @Override

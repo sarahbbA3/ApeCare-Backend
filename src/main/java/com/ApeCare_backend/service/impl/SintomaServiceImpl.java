@@ -39,6 +39,21 @@ public class SintomaServiceImpl implements SintomaService {
     }
 
     @Override
+    public SintomaDTO editar(SintomaDTO dto) {
+        Sintoma existente = sintomaRepo.findById(dto.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Síntoma no encontrado"));
+
+        Estado estado = estadoRepo.findById(1L).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado ACTIVO no encontrado"));
+
+        existente.setNombre(dto.getNombre());
+        existente.setDescripcion(dto.getDescripcion());
+        existente.setEstado(estado);
+
+        return SintomaMapper.toDTO(sintomaRepo.save(existente));
+    }
+
+    @Override
     public void eliminar(Long id, Long estadoId) {
         Sintoma sintoma = sintomaRepo.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Síntoma no encontrado"));
