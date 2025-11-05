@@ -6,6 +6,8 @@ import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.Medico;
 import com.ApeCare_backend.entity.TandaLabor;
 
+import java.time.LocalDate;
+
 public class MedicoMapper {
 
     public static MedicoDTO toDTO(Medico medico) {
@@ -16,6 +18,12 @@ public class MedicoMapper {
         dto.setEspecialidadId(medico.getEspecialidad().getId());
         dto.setTandaLaborId(medico.getTandaLabor().getId());
         dto.setFechaCreacion(medico.getFechaCreacion().toLocalDate());
+
+        LocalDate fechaActualizacion = medico.getFechaActualizacion() != null
+                ? medico.getFechaActualizacion().toLocalDate()
+                : medico.getFechaCreacion().toLocalDate();
+
+        dto.setFechaActualizacion(fechaActualizacion);
         return dto;
     }
 

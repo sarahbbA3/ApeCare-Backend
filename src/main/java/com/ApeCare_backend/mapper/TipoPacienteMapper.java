@@ -4,14 +4,22 @@ import com.ApeCare_backend.dto.TipoPacienteDTO;
 import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.TipoPaciente;
 
+import java.time.LocalDate;
+
 public class TipoPacienteMapper {
 
     public static TipoPacienteDTO toDTO(TipoPaciente tipo) {
+        LocalDate fechaCreacion = tipo.getFechaCreacion().toLocalDate();
+        LocalDate fechaActualizacion = tipo.getFechaActualizacion() != null
+                ? tipo.getFechaActualizacion().toLocalDate()
+                : fechaCreacion;
+
         TipoPacienteDTO dto = new TipoPacienteDTO();
         dto.setId(tipo.getId());
         dto.setNombre(tipo.getNombre());
         dto.setDescripcion(tipo.getDescripcion());
-        dto.setFechaCreacion(tipo.getFechaCreacion().toLocalDate());
+        dto.setFechaCreacion(fechaCreacion);
+        dto.setFechaActualizacion(fechaActualizacion);
         return dto;
     }
 

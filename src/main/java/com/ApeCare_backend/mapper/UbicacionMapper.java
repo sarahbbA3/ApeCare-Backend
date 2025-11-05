@@ -4,15 +4,23 @@ import com.ApeCare_backend.dto.UbicacionDTO;
 import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.Ubicacion;
 
+import java.time.LocalDate;
+
 public class UbicacionMapper {
 
     public static UbicacionDTO toDTO(Ubicacion ubicacion) {
+        LocalDate fechaCreacion = ubicacion.getFechaCreacion().toLocalDate();
+        LocalDate fechaActualizacion = ubicacion.getFechaActualizacion() != null
+                ? ubicacion.getFechaActualizacion().toLocalDate()
+                : fechaCreacion;
+
         return new UbicacionDTO(
                 ubicacion.getId(),
                 ubicacion.getEstante(),
                 ubicacion.getTramo(),
                 ubicacion.getCelda(),
-                ubicacion.getFechaCreacion().toLocalDate(),
+                fechaCreacion,
+                fechaActualizacion,
                 ubicacion.getEstado().getId()
         );
     }

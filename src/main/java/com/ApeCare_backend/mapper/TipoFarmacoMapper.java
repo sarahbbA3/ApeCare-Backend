@@ -4,14 +4,22 @@ import com.ApeCare_backend.dto.TipoFarmacoDTO;
 import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.TipoFarmaco;
 
+import java.time.LocalDate;
+
 public class TipoFarmacoMapper {
 
     public static TipoFarmacoDTO toDTO(TipoFarmaco tipo) {
+        LocalDate fechaCreacion = tipo.getFechaCreacion().toLocalDate();
+        LocalDate fechaActualizacion = tipo.getFechaActualizacion() != null
+                ? tipo.getFechaActualizacion().toLocalDate()
+                : fechaCreacion;
+
         return new TipoFarmacoDTO(
                 tipo.getId(),
                 tipo.getNombre(),
                 tipo.getDescripcion(),
-                tipo.getFechaCreacion().toLocalDate(),
+                fechaCreacion,
+                fechaActualizacion,
                 tipo.getEstado().getId()
         );
     }

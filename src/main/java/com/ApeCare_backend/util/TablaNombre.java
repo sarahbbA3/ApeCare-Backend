@@ -29,6 +29,7 @@ public class TablaNombre {
     //Atributos
 
     public static final String Nombre = "Nombre";
+    public static final String Edad = "Edad";
     public static final String Cedula = "Cedula";
     public static final String Descripcion = "Descripcion";
     public static final String FechaVisita = "FechaVisita";
@@ -38,6 +39,7 @@ public class TablaNombre {
     public static final String NumeroCarnet = "NumeroCarnet";
     public static final String FechaCreacion = "FechaCreacion";
     public static final String FechaVencimiento = "FechaVencimiento";
+    public static final String FechaActualizacion = "FechaActualizacion";
     public static final String Dosis = "Dosis";
     public static final String CantidadDisponible = "CantidadDisponible";
     public static final String Estante = "Estante";

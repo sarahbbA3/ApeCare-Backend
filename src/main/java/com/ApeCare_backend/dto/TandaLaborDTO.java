@@ -17,5 +17,7 @@ public class TandaLaborDTO {
     private String descripcion;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaCreacion;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaActualizacion;
 
 }

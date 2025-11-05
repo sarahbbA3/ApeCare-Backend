@@ -32,6 +32,10 @@ public class PacienteServiceImpl implements PacienteService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cédula inválida");
         }
 
+        if (dto.getEdad() != null && dto.getEdad() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La edad no puede ser negativa");
+        }
+
         if (pacienteRepo.findByCedula(dto.getCedula()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un paciente con esta cédula");
         }
@@ -62,6 +66,10 @@ public class PacienteServiceImpl implements PacienteService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cédula inválida");
         }
 
+        if (dto.getEdad() != null && dto.getEdad() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La edad no puede ser negativa");
+        }
+
         if (!dto.getCedula().equals(existente.getCedula()) &&
                 pacienteRepo.findByCedula(dto.getCedula()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un paciente con esta cédula");
@@ -74,6 +82,7 @@ public class PacienteServiceImpl implements PacienteService {
         existente.setCedula(dto.getCedula());
         existente.setNumeroCarnet(dto.getNumeroCarnet());
         existente.setTipoPaciente(tipo);
+        existente.setEdad(dto.getEdad());
 
         return PacienteMapper.toDTO(pacienteRepo.save(existente));
     }
@@ -89,5 +98,4 @@ public class PacienteServiceImpl implements PacienteService {
         paciente.setEstado(estado);
         pacienteRepo.save(paciente);
     }
-
 }

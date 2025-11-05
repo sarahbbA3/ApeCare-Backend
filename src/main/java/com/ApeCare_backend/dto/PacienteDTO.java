@@ -14,10 +14,13 @@ public class PacienteDTO {
 
     private Long id;
     private String nombre;
+    private Integer edad;
     private String cedula;
     private String numeroCarnet;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaRegistro;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaActualizacion;
     private Long tipoPacienteId;
 
 }
