@@ -3,16 +3,24 @@ package com.ApeCare_backend.mapper;
 import com.ApeCare_backend.dto.MedicamentoDTO;
 import com.ApeCare_backend.entity.*;
 
+import java.time.LocalDate;
+
 public class MedicamentoMapper {
 
     public static MedicamentoDTO toDTO(Medicamento medicamento) {
+        LocalDate fechaCreacion = medicamento.getFechaCreacion().toLocalDate();
+        LocalDate fechaActualizacion = medicamento.getFechaActualizacion() != null
+                ? medicamento.getFechaActualizacion().toLocalDate()
+                : fechaCreacion;
+
         MedicamentoDTO dto = new MedicamentoDTO();
         dto.setId(medicamento.getId());
         dto.setDescripcion(medicamento.getDescripcion());
         dto.setDosis(medicamento.getDosis());
         dto.setCantidadDisponible(medicamento.getCantidadDisponible());
         dto.setFechaVencimiento(medicamento.getFechaVencimiento());
-        dto.setFechaCreacion(medicamento.getFechaCreacion().toLocalDate());
+        dto.setFechaCreacion(fechaCreacion);
+        dto.setFechaActualizacion(fechaActualizacion);
 
         dto.setTipoFarmacoId(medicamento.getTipoFarmaco().getId());
         dto.setUbicacionId(medicamento.getUbicacion().getId());

@@ -4,6 +4,8 @@ import com.ApeCare_backend.dto.TandaLaborDTO;
 import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.TandaLabor;
 
+import java.time.LocalDate;
+
 public class TandaLaborMapper {
 
     public static TandaLaborDTO toDTO(TandaLabor tanda) {
@@ -12,6 +14,12 @@ public class TandaLaborMapper {
         dto.setNombre(tanda.getNombre());
         dto.setDescripcion(tanda.getDescripcion());
         dto.setFechaCreacion(tanda.getFechaCreacion().toLocalDate());
+
+        LocalDate fechaActualizacion = tanda.getFechaActualizacion() != null
+                ? tanda.getFechaActualizacion().toLocalDate()
+                : tanda.getFechaCreacion().toLocalDate();
+
+        dto.setFechaActualizacion(fechaActualizacion);
         return dto;
     }
 

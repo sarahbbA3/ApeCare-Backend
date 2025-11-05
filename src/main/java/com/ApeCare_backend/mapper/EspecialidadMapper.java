@@ -4,6 +4,8 @@ import com.ApeCare_backend.dto.EspecialidadDTO;
 import com.ApeCare_backend.entity.Especialidad;
 import com.ApeCare_backend.entity.Estado;
 
+import java.time.LocalDate;
+
 public class EspecialidadMapper {
 
     public static EspecialidadDTO toDTO(Especialidad especialidad) {
@@ -12,6 +14,12 @@ public class EspecialidadMapper {
         dto.setNombre(especialidad.getNombre());
         dto.setDescripcion(especialidad.getDescripcion());
         dto.setFechaCreacion(especialidad.getFechaCreacion().toLocalDate());
+
+        LocalDate fechaActualizacion = especialidad.getFechaActualizacion() != null
+                ? especialidad.getFechaActualizacion().toLocalDate()
+                : especialidad.getFechaCreacion().toLocalDate();
+
+        dto.setFechaActualizacion(fechaActualizacion);
         return dto;
     }
 

@@ -4,14 +4,22 @@ import com.ApeCare_backend.dto.MarcaDTO;
 import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.Marca;
 
+import java.time.LocalDate;
+
 public class MarcaMapper {
 
     public static MarcaDTO toDTO(Marca marca) {
+        LocalDate fechaCreacion = marca.getFechaCreacion().toLocalDate();
+        LocalDate fechaActualizacion = marca.getFechaActualizacion() != null
+                ? marca.getFechaActualizacion().toLocalDate()
+                : fechaCreacion;
+
         return new MarcaDTO(
                 marca.getId(),
                 marca.getNombre(),
                 marca.getDescripcion(),
-                marca.getFechaCreacion().toLocalDate(),
+                fechaCreacion,
+                fechaActualizacion,
                 marca.getEstado().getId()
         );
     }

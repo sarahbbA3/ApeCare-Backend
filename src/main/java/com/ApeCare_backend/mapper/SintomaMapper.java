@@ -4,14 +4,22 @@ import com.ApeCare_backend.dto.SintomaDTO;
 import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.Sintoma;
 
+import java.time.LocalDate;
+
 public class SintomaMapper {
 
     public static SintomaDTO toDTO(Sintoma sintoma) {
+        LocalDate fechaCreacion = sintoma.getFechaCreacion().toLocalDate();
+        LocalDate fechaActualizacion = sintoma.getFechaActualizacion() != null
+                ? sintoma.getFechaActualizacion().toLocalDate()
+                : fechaCreacion;
+
         SintomaDTO dto = new SintomaDTO();
         dto.setId(sintoma.getId());
         dto.setNombre(sintoma.getNombre());
         dto.setDescripcion(sintoma.getDescripcion());
-        dto.setFechaCreacion(sintoma.getFechaCreacion().toLocalDate());
+        dto.setFechaCreacion(fechaCreacion);
+        dto.setFechaActualizacion(fechaActualizacion);
         return dto;
     }
 

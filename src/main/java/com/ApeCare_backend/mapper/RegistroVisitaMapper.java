@@ -18,6 +18,7 @@ public class RegistroVisitaMapper {
         dto.setPacienteId(visita.getPaciente().getId());
         dto.setMedicoId(visita.getMedico().getId());
         dto.setFechaCreacion(visita.getFechaCreacion().toLocalDate());
+        dto.setFechaActualizacion(visita.getFechaActualizacion().toLocalDate());
 
         dto.setSintomasIds(
                 visita.getSintomas().stream()
@@ -33,6 +34,7 @@ public class RegistroVisitaMapper {
 
         return dto;
     }
+
     public static RegistroVisita toEntity(
             RegistroVisitaDTO dto,
             Paciente paciente,
