@@ -3,19 +3,20 @@ package com.ApeCare_backend.entity;
 import com.ApeCare_backend.util.TablaNombre;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = TablaNombre.Medico)
+@Table(name = TablaNombre.Rol)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Medico {
+public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,23 +24,11 @@ public class Medico {
     @Column(name = TablaNombre.Nombre)
     private String nombre;
 
-    @Column(name = TablaNombre.Cedula, unique = true)
-    private String cedula;
+    @Column(name = TablaNombre.Descripcion)
+    private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "EspecialidadId", foreignKey = @ForeignKey(name = "FK_Medico_Especialidad"))
-    private Especialidad especialidad;
-
-    @ManyToOne
-    @JoinColumn(name = "TandaLaborId", foreignKey = @ForeignKey(name = "FK_Medico_TandaLabor"))
-    private TandaLabor tandaLabor;
-
-    @OneToOne
-    @JoinColumn(name = "UsuarioId", unique = true, foreignKey = @ForeignKey(name = "FK_Medico_Usuario"))
-    private Usuario usuario;
-
-    @ManyToOne
-    @JoinColumn(name = "EstadoId", foreignKey = @ForeignKey(name = "FK_Medico_Estado"))
+    @JoinColumn(name = "EstadoId", foreignKey = @ForeignKey(name = "FK_Rol_Estado"))
     private Estado estado;
 
     @CreationTimestamp

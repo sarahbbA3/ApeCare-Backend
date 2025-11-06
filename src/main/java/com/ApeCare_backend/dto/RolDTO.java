@@ -10,17 +10,12 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicoDTO {
-
+public class RolDTO {
     private Long id;
     private String nombre;
-    private String cedula;
-    private Long especialidadId;
-    private Long tandaLaborId;
-    private Long usuarioId;
+    private String descripcion;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaCreacion;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaActualizacion;
-
 }

@@ -24,11 +24,15 @@ public class TablaNombre {
     public static final String TipoFarmaco = "TipoFarmaco";
     public static final String MedicamentoSuministrado = "MedicamentoSuministrado";
     public static final String RegistroVisitaSintoma = "RegistroVisitaSintoma";
+    public static final String Rol = "Rol";
+    public static final String Usuario = "Usuario";
     public static final String Estado = "Estado";
 
     //Atributos
 
     public static final String Nombre = "Nombre";
+    public static final String Correo = "Correo";
+    public static final String Contrasena = "Contrasena";
     public static final String Edad = "Edad";
     public static final String Cedula = "Cedula";
     public static final String Descripcion = "Descripcion";
