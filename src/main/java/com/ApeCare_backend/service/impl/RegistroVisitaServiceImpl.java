@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,10 @@ public class RegistroVisitaServiceImpl implements RegistroVisitaService {
 
     @Override
     public RegistroVisitaDTO crear(RegistroVisitaDTO dto) {
+        if (dto.getFechaVisita().isAfter(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se permiten fechas futuras");
+        }
+
         Estado estado = estadoRepo.findById(1L).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado ACTIVO no encontrado"));
 
@@ -75,6 +80,10 @@ public class RegistroVisitaServiceImpl implements RegistroVisitaService {
     @Transactional
     @Override
     public RegistroVisitaDTO editar(Long id, RegistroVisitaDTO dto) {
+        if (dto.getFechaVisita().isAfter(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se permiten fechas futuras");
+        }
+
         RegistroVisita visita = visitaRepo.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro de visita no encontrado"));
 

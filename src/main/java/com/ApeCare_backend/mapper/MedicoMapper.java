@@ -1,10 +1,7 @@
 package com.ApeCare_backend.mapper;
 
 import com.ApeCare_backend.dto.MedicoDTO;
-import com.ApeCare_backend.entity.Especialidad;
-import com.ApeCare_backend.entity.Estado;
-import com.ApeCare_backend.entity.Medico;
-import com.ApeCare_backend.entity.TandaLabor;
+import com.ApeCare_backend.entity.*;
 
 import java.time.LocalDate;
 
@@ -17,6 +14,9 @@ public class MedicoMapper {
         dto.setCedula(medico.getCedula());
         dto.setEspecialidadId(medico.getEspecialidad().getId());
         dto.setTandaLaborId(medico.getTandaLabor().getId());
+        dto.setUsuarioId(
+                medico.getUsuario() != null ? medico.getUsuario().getId() : null
+        );
         dto.setFechaCreacion(medico.getFechaCreacion().toLocalDate());
 
         LocalDate fechaActualizacion = medico.getFechaActualizacion() != null
@@ -27,7 +27,7 @@ public class MedicoMapper {
         return dto;
     }
 
-    public static Medico toEntity(MedicoDTO dto, Especialidad especialidad, TandaLabor tanda, Estado estado) {
+    public static Medico toEntity(MedicoDTO dto, Especialidad especialidad, TandaLabor tanda, Estado estado, Usuario usuario) {
         Medico medico = new Medico();
         medico.setId(dto.getId());
         medico.setNombre(dto.getNombre());
@@ -35,6 +35,7 @@ public class MedicoMapper {
         medico.setEspecialidad(especialidad);
         medico.setTandaLabor(tanda);
         medico.setEstado(estado);
+        medico.setUsuario(usuario);
         return medico;
     }
 

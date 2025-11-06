@@ -1,15 +1,9 @@
 package com.ApeCare_backend.service.impl;
 
 import com.ApeCare_backend.dto.MedicoDTO;
-import com.ApeCare_backend.entity.Especialidad;
-import com.ApeCare_backend.entity.Estado;
-import com.ApeCare_backend.entity.Medico;
-import com.ApeCare_backend.entity.TandaLabor;
+import com.ApeCare_backend.entity.*;
 import com.ApeCare_backend.mapper.MedicoMapper;
-import com.ApeCare_backend.repository.EspecialidadRepository;
-import com.ApeCare_backend.repository.EstadoRepository;
-import com.ApeCare_backend.repository.MedicoRepository;
-import com.ApeCare_backend.repository.TandaLaborRepository;
+import com.ApeCare_backend.repository.*;
 import com.ApeCare_backend.service.MedicoService;
 import com.ApeCare_backend.util.ValidacionCedula;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +23,7 @@ public class MedicoServiceImpl implements MedicoService {
     private final EstadoRepository estadoRepo;
     private final EspecialidadRepository especialidadRepo;
     private final TandaLaborRepository tandaRepo;
+    private final UsuarioRepository usuarioRepo;
 
     @Override
     public MedicoDTO crear(MedicoDTO dto) {
@@ -40,6 +35,10 @@ public class MedicoServiceImpl implements MedicoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un médico con esta cédula");
         }
 
+        if (medicoRepo.findByUsuarioId(dto.getUsuarioId()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este usuario ya está vinculado a un médico");
+        }
+
         Estado estado = estadoRepo.findById(1L).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado ACTIVO no encontrado"));
 
@@ -49,7 +48,10 @@ public class MedicoServiceImpl implements MedicoService {
         TandaLabor tanda = tandaRepo.findById(dto.getTandaLaborId()).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Tanda laboral no encontrada"));
 
-        Medico medico = MedicoMapper.toEntity(dto, especialidad, tanda, estado);
+        Usuario usuario = usuarioRepo.findById(dto.getUsuarioId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+        Medico medico = MedicoMapper.toEntity(dto, especialidad, tanda, estado, usuario);
         return MedicoMapper.toDTO(medicoRepo.save(medico));
     }
 
@@ -75,10 +77,14 @@ public class MedicoServiceImpl implements MedicoService {
         TandaLabor tanda = tandaRepo.findById(dto.getTandaLaborId()).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Tanda laboral no encontrada"));
 
+        Usuario usuario = usuarioRepo.findById(dto.getUsuarioId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
         medico.setNombre(dto.getNombre());
         medico.setCedula(dto.getCedula());
         medico.setEspecialidad(especialidad);
         medico.setTandaLabor(tanda);
+        medico.setUsuario(usuario);
         medico.setFechaCreacion(LocalDateTime.now());
 
         return MedicoMapper.toDTO(medicoRepo.save(medico));
