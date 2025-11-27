@@ -20,10 +20,17 @@ public class Ubicacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = TablaNombre.Nombre)
+    private String nombre;
+
     //aqui pruebo a ver si con celda funciana
     @ManyToOne
     @JoinColumn(name = "CeldaId", foreignKey = @ForeignKey(name = "FK_Ubicacion_Celda"))
     private Celda celda;
+
+    @ManyToOne //provando para "filtar" ubis
+    @JoinColumn(name = "TipoFarmacoId", foreignKey = @ForeignKey(name = "FK_Ubicacion_TipoFarmaco"))
+    private TipoFarmaco tipoFarmaco;
 
     @ManyToOne
     @JoinColumn(name = "EstadoId", foreignKey = @ForeignKey(name = "FK_Ubicacion_Estado"))

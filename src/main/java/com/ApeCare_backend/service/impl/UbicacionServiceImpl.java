@@ -3,10 +3,12 @@ package com.ApeCare_backend.service.impl;
 import com.ApeCare_backend.dto.UbicacionDTO;
 import com.ApeCare_backend.entity.Celda;
 import com.ApeCare_backend.entity.Estado;
+import com.ApeCare_backend.entity.TipoFarmaco;
 import com.ApeCare_backend.entity.Ubicacion;
 import com.ApeCare_backend.mapper.UbicacionMapper;
 import com.ApeCare_backend.repository.CeldaRepository;
 import com.ApeCare_backend.repository.EstadoRepository;
+import com.ApeCare_backend.repository.TipoFarmacoRepository;
 import com.ApeCare_backend.repository.UbicacionRepository;
 import com.ApeCare_backend.service.UbicacionService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class UbicacionServiceImpl implements UbicacionService {
     private final UbicacionRepository ubicacionRepo;
     private final EstadoRepository estadoRepo;
     private final CeldaRepository celdaRepo;
+    private final TipoFarmacoRepository tipoRepo;
 
     @Override
     public UbicacionDTO crear(UbicacionDTO dto) {
@@ -28,8 +31,10 @@ public class UbicacionServiceImpl implements UbicacionService {
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
         Celda celda = celdaRepo.findById(dto.getCeldaId())
                 .orElseThrow(() -> new RuntimeException("Celda no encontrada"));
+        TipoFarmaco tipo = tipoRepo.findById(dto.getTipoFarmacoId())
+                .orElseThrow(() -> new RuntimeException("Tipo de fármaco no encontrado"));
 
-        Ubicacion ubicacion = UbicacionMapper.toEntity(dto, celda, estado);
+        Ubicacion ubicacion = UbicacionMapper.toEntity(dto, celda, tipo, estado);
         return UbicacionMapper.toDTO(ubicacionRepo.save(ubicacion));
     }
 
@@ -49,8 +54,12 @@ public class UbicacionServiceImpl implements UbicacionService {
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
         Celda celda = celdaRepo.findById(dto.getCeldaId())
                 .orElseThrow(() -> new RuntimeException("Celda no encontrada"));
+        TipoFarmaco tipo = tipoRepo.findById(dto.getTipoFarmacoId())
+                .orElseThrow(() -> new RuntimeException("Tipo de fármaco no encontrado"));
 
+        existente.setNombre(dto.getNombre());
         existente.setCelda(celda);
+        existente.setTipoFarmaco(tipo);
         existente.setEstado(estado);
 
         return UbicacionMapper.toDTO(ubicacionRepo.save(existente));

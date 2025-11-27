@@ -25,5 +25,11 @@ public class MedicamentoDTO {
     private LocalDate fechaCreacion;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaActualizacion;
+    private String tipoFarmacoNombre;
+    private String marcaNombre;
+    private String ubicacionNombre;
+    private String estanteNombre;
+    private String tramoNombre;
+    private String celdaNombre;
 
 }

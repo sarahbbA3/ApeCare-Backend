@@ -12,7 +12,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UbicacionDTO {
     private Long id;
+    private String nombre;
     private Long celdaId;
+    private String celdaNombre;
+    private String tramoNombre;
+    private String estanteNombre;
+    private Long tipoFarmacoId;
+    private String tipoFarmacoNombre;
     private Long estadoId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaCreacion;
