@@ -3,30 +3,33 @@ package com.ApeCare_backend.entity;
 import com.ApeCare_backend.util.TablaNombre;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = TablaNombre.Ubicacion)
+@Table(name = "Celda")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ubicacion {
+public class Celda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //aqui pruebo a ver si con celda funciana
-    @ManyToOne
-    @JoinColumn(name = "CeldaId", foreignKey = @ForeignKey(name = "FK_Ubicacion_Celda"))
-    private Celda celda;
+    @Column(name = TablaNombre.Nombre)
+    private String nombre;
 
     @ManyToOne
-    @JoinColumn(name = "EstadoId", foreignKey = @ForeignKey(name = "FK_Ubicacion_Estado"))
+    @JoinColumn(name = "TramoId", foreignKey = @ForeignKey(name = "FK_Celda_Tramo"))
+    private Tramo tramo;
+
+    @ManyToOne
+    @JoinColumn(name = "EstadoId", foreignKey = @ForeignKey(name = "FK_Celda_Estado"))
     private Estado estado;
 
     @CreationTimestamp

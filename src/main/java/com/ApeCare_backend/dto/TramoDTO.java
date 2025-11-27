@@ -10,12 +10,14 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UbicacionDTO {
+public class TramoDTO {
     private Long id;
-    private Long celdaId;
-    private Long estadoId;
+    private String nombre;
+    private Long estanteId;
+    private String estanteNombre;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaCreacion;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaActualizacion;
+    private Long estadoId;
 }

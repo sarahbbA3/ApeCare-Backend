@@ -1,6 +1,7 @@
 package com.ApeCare_backend.mapper;
 
 import com.ApeCare_backend.dto.UbicacionDTO;
+import com.ApeCare_backend.entity.Celda;
 import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.Ubicacion;
 
@@ -9,29 +10,26 @@ import java.time.LocalDate;
 public class UbicacionMapper {
 
     public static UbicacionDTO toDTO(Ubicacion ubicacion) {
-        LocalDate fechaCreacion = ubicacion.getFechaCreacion().toLocalDate();
-        LocalDate fechaActualizacion = ubicacion.getFechaActualizacion() != null
+        LocalDate fc = ubicacion.getFechaCreacion().toLocalDate();
+        LocalDate fa = ubicacion.getFechaActualizacion() != null
                 ? ubicacion.getFechaActualizacion().toLocalDate()
-                : fechaCreacion;
+                : fc;
 
         return new UbicacionDTO(
                 ubicacion.getId(),
-                ubicacion.getEstante(),
-                ubicacion.getTramo(),
-                ubicacion.getCelda(),
-                fechaCreacion,
-                fechaActualizacion,
-                ubicacion.getEstado().getId()
+                ubicacion.getCelda().getId(),
+                ubicacion.getEstado().getId(),
+                fc,
+                fa
         );
     }
 
-    public static Ubicacion toEntity(UbicacionDTO dto, Estado estado) {
-        Ubicacion ubicacion = new Ubicacion();
-        ubicacion.setId(dto.getId());
-        ubicacion.setEstante(dto.getEstante());
-        ubicacion.setTramo(dto.getTramo());
-        ubicacion.setCelda(dto.getCelda());
-        ubicacion.setEstado(estado);
-        return ubicacion;
+    public static Ubicacion toEntity(UbicacionDTO dto, Celda celda, Estado estado) {
+        Ubicacion u = new Ubicacion();
+        u.setId(dto.getId());
+        u.setCelda(celda);
+        u.setEstado(estado);
+        return u;
     }
+
 }
