@@ -1,9 +1,11 @@
 package com.ApeCare_backend.service.impl;
 
 import com.ApeCare_backend.dto.UbicacionDTO;
+import com.ApeCare_backend.entity.Celda;
 import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.Ubicacion;
 import com.ApeCare_backend.mapper.UbicacionMapper;
+import com.ApeCare_backend.repository.CeldaRepository;
 import com.ApeCare_backend.repository.EstadoRepository;
 import com.ApeCare_backend.repository.UbicacionRepository;
 import com.ApeCare_backend.service.UbicacionService;
@@ -18,12 +20,16 @@ import java.util.stream.Collectors;
 public class UbicacionServiceImpl implements UbicacionService {
     private final UbicacionRepository ubicacionRepo;
     private final EstadoRepository estadoRepo;
+    private final CeldaRepository celdaRepo;
 
     @Override
     public UbicacionDTO crear(UbicacionDTO dto) {
         Estado estado = estadoRepo.findById(dto.getEstadoId())
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
-        Ubicacion ubicacion = UbicacionMapper.toEntity(dto, estado);
+        Celda celda = celdaRepo.findById(dto.getCeldaId())
+                .orElseThrow(() -> new RuntimeException("Celda no encontrada"));
+
+        Ubicacion ubicacion = UbicacionMapper.toEntity(dto, celda, estado);
         return UbicacionMapper.toDTO(ubicacionRepo.save(ubicacion));
     }
 
@@ -41,10 +47,10 @@ public class UbicacionServiceImpl implements UbicacionService {
 
         Estado estado = estadoRepo.findById(dto.getEstadoId())
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+        Celda celda = celdaRepo.findById(dto.getCeldaId())
+                .orElseThrow(() -> new RuntimeException("Celda no encontrada"));
 
-        existente.setEstante(dto.getEstante());
-        existente.setTramo(dto.getTramo());
-        existente.setCelda(dto.getCelda());
+        existente.setCelda(celda);
         existente.setEstado(estado);
 
         return UbicacionMapper.toDTO(ubicacionRepo.save(existente));

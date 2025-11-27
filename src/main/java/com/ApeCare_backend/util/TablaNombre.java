@@ -26,6 +26,9 @@ public class TablaNombre {
     public static final String RegistroVisitaSintoma = "RegistroVisitaSintoma";
     public static final String Rol = "Rol";
     public static final String Usuario = "Usuario";
+    public static final String Estante = "Estante";
+    public static final String Tramo = "Tramo";
+    public static final String Celda = "Celda";
     public static final String Estado = "Estado";
 
     //Atributos
@@ -46,9 +49,6 @@ public class TablaNombre {
     public static final String FechaActualizacion = "FechaActualizacion";
     public static final String Dosis = "Dosis";
     public static final String CantidadDisponible = "CantidadDisponible";
-    public static final String Estante = "Estante";
-    public static final String Tramo = "Tramo";
-    public static final String Celda = "Celda";
     public static final String CantidadSuministrada = "CantidadSuministrada";
 
 }
