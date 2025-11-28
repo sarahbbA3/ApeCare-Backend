@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public class TandaLaborMapper {
 
-    public static TandaLaborDTO toDTO(TandaLabor tanda) {
+    public static TandaLaborDTO toDTO(TandaLabor tanda, Integer medicosAsignados) {
         TandaLaborDTO dto = new TandaLaborDTO();
         dto.setId(tanda.getId());
         dto.setNombre(tanda.getNombre());
@@ -20,6 +20,10 @@ public class TandaLaborMapper {
                 : tanda.getFechaCreacion().toLocalDate();
 
         dto.setFechaActualizacion(fechaActualizacion);
+
+        // Asignar el número de médicos
+        dto.setMedicosAsignados(medicosAsignados);
+
         return dto;
     }
 

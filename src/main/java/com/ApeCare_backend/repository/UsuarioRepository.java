@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> findByEstadoNombreIgnoreCase(String estado);
     Optional<Usuario> findByCorreo(String correo);
+    Long countByRolId(Long rolId);
 }

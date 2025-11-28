@@ -10,4 +10,5 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
     List<Medico> findByEstadoNombreIgnoreCase(String estado);
     Optional<Medico> findByCedula(String cedula);
     Optional<Medico> findByUsuarioId(Long usuarioId);
+    long countByTandaLaborId(Long tandaLaborId);
 }
