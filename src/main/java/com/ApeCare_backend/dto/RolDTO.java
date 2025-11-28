@@ -18,4 +18,5 @@ public class RolDTO {
     private LocalDate fechaCreacion;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaActualizacion;
+    private Long usuariosAsignados;
 }

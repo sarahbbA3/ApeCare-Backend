@@ -5,6 +5,7 @@ import com.ApeCare_backend.entity.Estado;
 import com.ApeCare_backend.entity.TandaLabor;
 import com.ApeCare_backend.mapper.TandaLaborMapper;
 import com.ApeCare_backend.repository.EstadoRepository;
+import com.ApeCare_backend.repository.MedicoRepository;
 import com.ApeCare_backend.repository.TandaLaborRepository;
 import com.ApeCare_backend.service.TandaLaborService;
 import lombok.RequiredArgsConstructor;
@@ -22,18 +23,26 @@ public class TandaLaborServiceImpl implements TandaLaborService {
 
     private final TandaLaborRepository tandaRepo;
     private final EstadoRepository estadoRepo;
+    private final MedicoRepository medicoRepo;
 
     @Override
     public TandaLaborDTO crear(TandaLaborDTO dto) {
         Estado estado = estadoRepo.findById(1L).orElseThrow();
         TandaLabor tanda = TandaLaborMapper.toEntity(dto, estado);
-        return TandaLaborMapper.toDTO(tandaRepo.save(tanda));
+        TandaLabor saved = tandaRepo.save(tanda);
+
+        // aqui calculo medicos
+        int medicosAsignados = (int) medicoRepo.countByTandaLaborId(saved.getId());
+        return TandaLaborMapper.toDTO(saved, medicosAsignados);
     }
 
     @Override
     public List<TandaLaborDTO> listarActivos() {
         return tandaRepo.findByEstadoNombreIgnoreCase("ACTIVO").stream()
-                .map(TandaLaborMapper::toDTO)
+                .map(tanda -> {
+                    int medicosAsignados = (int) medicoRepo.countByTandaLaborId(tanda.getId());
+                    return TandaLaborMapper.toDTO(tanda, medicosAsignados);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -46,7 +55,10 @@ public class TandaLaborServiceImpl implements TandaLaborService {
         tanda.setDescripcion(dto.getDescripcion());
         tanda.setFechaCreacion(LocalDateTime.now());
 
-        return TandaLaborMapper.toDTO(tandaRepo.save(tanda));
+        TandaLabor saved = tandaRepo.save(tanda);
+
+        int medicosAsignados = (int) medicoRepo.countByTandaLaborId(saved.getId());
+        return TandaLaborMapper.toDTO(saved, medicosAsignados);
     }
 
     @Override
@@ -56,5 +68,4 @@ public class TandaLaborServiceImpl implements TandaLaborService {
         tanda.setEstado(estado);
         tandaRepo.save(tanda);
     }
-
 }
