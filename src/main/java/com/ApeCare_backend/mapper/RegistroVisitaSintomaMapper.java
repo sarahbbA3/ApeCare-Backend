@@ -14,6 +14,9 @@ public class RegistroVisitaSintomaMapper {
         dto.setRegistroVisitaId(entity.getRegistroVisita().getId());
         dto.setSintomaId(entity.getSintoma().getId());
         dto.setFechaCreacion(entity.getFechaCreacion().toLocalDate());
+        dto.setFechaActualizacion(entity.getFechaActualizacion() != null
+                ? entity.getFechaActualizacion().toLocalDate()
+                : null);
         return dto;
     }
 

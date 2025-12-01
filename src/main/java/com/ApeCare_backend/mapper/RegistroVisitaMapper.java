@@ -1,5 +1,6 @@
 package com.ApeCare_backend.mapper;
 
+import com.ApeCare_backend.dto.MedicamentoSuministradoDTO;
 import com.ApeCare_backend.dto.RegistroVisitaDTO;
 import com.ApeCare_backend.entity.*;
 
@@ -26,12 +27,19 @@ public class RegistroVisitaMapper {
                         .collect(Collectors.toList())
         );
 
-        dto.setMedicamentosIds(
+        dto.setMedicamentos(
                 visita.getMedicamentosEntregados().stream()
-                        .map(m -> m.getMedicamento().getId())
+                        .map(m -> {
+                            MedicamentoSuministradoDTO medDTO = new MedicamentoSuministradoDTO();
+                            medDTO.setId(m.getId());
+                            medDTO.setMedicamentoId(m.getMedicamento().getId());
+                            medDTO.setCantidadSuministrada(m.getCantidadSuministrada());
+                            medDTO.setVisitaId(visita.getId());
+                            medDTO.setFechaCreacion(m.getFechaCreacion().toLocalDate());
+                            return medDTO;
+                        })
                         .collect(Collectors.toList())
         );
-
         return dto;
     }
 

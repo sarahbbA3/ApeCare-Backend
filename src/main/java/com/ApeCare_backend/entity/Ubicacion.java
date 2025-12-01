@@ -23,12 +23,11 @@ public class Ubicacion {
     @Column(name = TablaNombre.Nombre)
     private String nombre;
 
-    //aqui pruebo a ver si con celda funciana
     @ManyToOne
     @JoinColumn(name = "CeldaId", foreignKey = @ForeignKey(name = "FK_Ubicacion_Celda"))
     private Celda celda;
 
-    @ManyToOne //provando para "filtar" ubis
+    @ManyToOne
     @JoinColumn(name = "TipoFarmacoId", foreignKey = @ForeignKey(name = "FK_Ubicacion_TipoFarmaco"))
     private TipoFarmaco tipoFarmaco;
 

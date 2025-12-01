@@ -30,4 +30,8 @@ public class MedicamentoSuministradoController {
         service.eliminar(id, estadoId);
     }
 
+    @PutMapping("/{id}")
+    public MedicamentoSuministradoDTO editar(@PathVariable Long id, @RequestBody MedicamentoSuministradoDTO dto) {
+        return service.editar(id, dto);
+    }
 }

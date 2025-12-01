@@ -12,7 +12,9 @@ import com.ApeCare_backend.repository.RegistroVisitaSintomaRepository;
 import com.ApeCare_backend.repository.SintomaRepository;
 import com.ApeCare_backend.service.RegistroVisitaSintomaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,6 +51,25 @@ public class RegistroVisitaSintomaServiceImpl implements RegistroVisitaSintomaSe
         Estado estado = estadoRepo.findById(estadoId).orElseThrow();
         entity.setEstado(estado);
         repo.save(entity);
+    }
+
+    @Override
+    public RegistroVisitaSintomaDTO editar(Long id, RegistroVisitaSintomaDTO dto) {
+        RegistroVisitaSintoma entity = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "RegistroVisitaSintoma no encontrado"));
+
+        RegistroVisita visita = visitaRepo.findById(dto.getRegistroVisitaId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Visita no encontrada"));
+        Sintoma sintoma = sintomaRepo.findById(dto.getSintomaId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Síntoma no encontrado"));
+        Estado estado = estadoRepo.findById(1L)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado ACTIVO no encontrado"));
+
+        entity.setRegistroVisita(visita);
+        entity.setSintoma(sintoma);
+        entity.setEstado(estado);
+
+        return RegistroVisitaSintomaMapper.toDTO(repo.save(entity));
     }
 
 }

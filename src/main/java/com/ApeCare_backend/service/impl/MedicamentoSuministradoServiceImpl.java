@@ -12,7 +12,9 @@ import com.ApeCare_backend.repository.MedicamentoSuministradoRepository;
 import com.ApeCare_backend.repository.RegistroVisitaRepository;
 import com.ApeCare_backend.service.MedicamentoSuministradoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +34,17 @@ public class MedicamentoSuministradoServiceImpl implements MedicamentoSuministra
         Medicamento medicamento = medicamentoRepo.findById(dto.getMedicamentoId()).orElseThrow();
         RegistroVisita visita = visitaRepo.findById(dto.getVisitaId()).orElseThrow();
 
+        // Validar stock
+        if (dto.getCantidadSuministrada() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad debe ser mayor que 0");
+        }
+        if (dto.getCantidadSuministrada() > medicamento.getCantidadDisponible()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stock insuficiente de " + medicamento.getDescripcion());
+        }
+
+        medicamento.setCantidadDisponible(medicamento.getCantidadDisponible() - dto.getCantidadSuministrada());
+        medicamentoRepo.save(medicamento);
+
         MedicamentoSuministrado entity = MedicamentoSuministradoMapper.toEntity(dto, medicamento, visita, estado);
         return MedicamentoSuministradoMapper.toDTO(repo.save(entity));
     }
@@ -49,6 +62,42 @@ public class MedicamentoSuministradoServiceImpl implements MedicamentoSuministra
         Estado estado = estadoRepo.findById(estadoId).orElseThrow();
         entity.setEstado(estado);
         repo.save(entity);
+    }
+
+    @Override
+    public MedicamentoSuministradoDTO editar(Long id, MedicamentoSuministradoDTO dto) {
+        MedicamentoSuministrado entity = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "MedicamentoSuministrado no encontrado"));
+
+        Medicamento medicamento = medicamentoRepo.findById(dto.getMedicamentoId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medicamento no encontrado"));
+        RegistroVisita visita = visitaRepo.findById(dto.getVisitaId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Visita no encontrada"));
+        Estado estado = estadoRepo.findById(1L)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado ACTIVO no encontrado"));
+
+        // Restaurar stock previo
+        Medicamento medAnterior = entity.getMedicamento();
+        medAnterior.setCantidadDisponible(medAnterior.getCantidadDisponible() + entity.getCantidadSuministrada());
+        medicamentoRepo.save(medAnterior);
+
+        // Validar nueva cantidad
+        if (dto.getCantidadSuministrada() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad debe ser mayor que 0");
+        }
+        if (dto.getCantidadSuministrada() > medicamento.getCantidadDisponible()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stock insuficiente de " + medicamento.getDescripcion());
+        }
+
+        medicamento.setCantidadDisponible(medicamento.getCantidadDisponible() - dto.getCantidadSuministrada());
+        medicamentoRepo.save(medicamento);
+
+        entity.setMedicamento(medicamento);
+        entity.setVisita(visita);
+        entity.setEstado(estado);
+        entity.setCantidadSuministrada(dto.getCantidadSuministrada());
+
+        return MedicamentoSuministradoMapper.toDTO(repo.save(entity));
     }
 
 }

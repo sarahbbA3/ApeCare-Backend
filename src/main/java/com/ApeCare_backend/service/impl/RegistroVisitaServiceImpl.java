@@ -52,12 +52,31 @@ public class RegistroVisitaServiceImpl implements RegistroVisitaService {
                     return rvs;
                 }).collect(Collectors.toList());
 
-        List<MedicamentoSuministrado> medicamentos = dto.getMedicamentosIds().stream()
-                .map(id -> {
-                    Medicamento medicamento = medicamentoRepo.findById(id).orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.NOT_FOUND, "Medicamento no encontrado: " + id));
+        List<MedicamentoSuministrado> medicamentos = dto.getMedicamentos().stream()
+                .map(medDTO -> {
+                    Medicamento medicamento = medicamentoRepo.findById(medDTO.getMedicamentoId())
+                            .orElseThrow(() ->
+                                    new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                            "Medicamento no encontrado: " + medDTO.getMedicamentoId()));
+
+                    int cantidadSolicitada = medDTO.getCantidadSuministrada();
+
+                    if (cantidadSolicitada <= 0) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "La cantidad suministrada debe ser mayor que 0");
+                    }
+
+                    if (cantidadSolicitada > medicamento.getCantidadDisponible()) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "Stock insuficiente de " + medicamento.getDescripcion());
+                    }
+
+                    medicamento.setCantidadDisponible(medicamento.getCantidadDisponible() - cantidadSolicitada);
+                    medicamentoRepo.save(medicamento);
+
                     MedicamentoSuministrado ms = new MedicamentoSuministrado();
                     ms.setMedicamento(medicamento);
+                    ms.setCantidadSuministrada(cantidadSolicitada);
                     ms.setEstado(estado);
                     return ms;
                 }).collect(Collectors.toList());
@@ -96,8 +115,11 @@ public class RegistroVisitaServiceImpl implements RegistroVisitaService {
         Estado estado = estadoRepo.findById(1L).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado ACTIVO no encontrado"));
 
-        visita.setSintomas(new ArrayList<>());
-        visita.setMedicamentosEntregados(new ArrayList<>());
+        // Guardar lista original de medicamentos entregados
+        List<MedicamentoSuministrado> originales = new ArrayList<>(visita.getMedicamentosEntregados());
+
+        visita.getSintomas().clear();
+        visita.getMedicamentosEntregados().clear();
 
         List<RegistroVisitaSintoma> sintomas = dto.getSintomasIds().stream()
                 .map(sintomaId -> {
@@ -110,24 +132,65 @@ public class RegistroVisitaServiceImpl implements RegistroVisitaService {
                     return rvs;
                 }).collect(Collectors.toList());
 
-        List<MedicamentoSuministrado> medicamentos = dto.getMedicamentosIds().stream()
-                .map(medicamentoId -> {
-                    Medicamento medicamento = medicamentoRepo.findById(medicamentoId).orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.NOT_FOUND, "Medicamento no encontrado: " + medicamentoId));
+        List<MedicamentoSuministrado> nuevos = dto.getMedicamentos().stream()
+                .map(medDTO -> {
+                    Medicamento medicamento = medicamentoRepo.findById(medDTO.getMedicamentoId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                    "Medicamento no encontrado: " + medDTO.getMedicamentoId()));
+
+                    int cantidadNueva = medDTO.getCantidadSuministrada();
+                    if (cantidadNueva <= 0) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad suministrada debe ser mayor que 0");
+                    }
+
+                    MedicamentoSuministrado previo = originales.stream()
+                            .filter(ms -> ms.getMedicamento().getId().equals(medDTO.getMedicamentoId()))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (previo != null) {
+                        int diferencia = cantidadNueva - previo.getCantidadSuministrada();
+                        if (diferencia > 0 && diferencia > medicamento.getCantidadDisponible()) {
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                    "Stock insuficiente de " + medicamento.getDescripcion());
+                        }
+                        medicamento.setCantidadDisponible(medicamento.getCantidadDisponible() - diferencia);
+                    } else {
+                        if (cantidadNueva > medicamento.getCantidadDisponible()) {
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                    "Stock insuficiente de " + medicamento.getDescripcion());
+                        }
+                        medicamento.setCantidadDisponible(medicamento.getCantidadDisponible() - cantidadNueva);
+                    }
+
+                    medicamentoRepo.save(medicamento);
+
                     MedicamentoSuministrado ms = new MedicamentoSuministrado();
                     ms.setMedicamento(medicamento);
+                    ms.setCantidadSuministrada(cantidadNueva);
                     ms.setEstado(estado);
                     ms.setVisita(visita);
                     return ms;
                 }).collect(Collectors.toList());
+
+        for (MedicamentoSuministrado previo : originales) {
+            boolean sigue = nuevos.stream()
+                    .anyMatch(ms -> ms.getMedicamento().getId().equals(previo.getMedicamento().getId()));
+            if (!sigue) {
+                Medicamento med = previo.getMedicamento();
+                med.setCantidadDisponible(med.getCantidadDisponible() + previo.getCantidadSuministrada());
+                medicamentoRepo.save(med);
+            }
+        }
 
         visita.setFechaVisita(dto.getFechaVisita().atTime(dto.getHoraVisita()));
         visita.setHoraVisita(dto.getHoraVisita());
         visita.setRecomendaciones(dto.getRecomendaciones());
         visita.setPaciente(paciente);
         visita.setMedico(medico);
-        visita.setSintomas(sintomas);
-        visita.setMedicamentosEntregados(medicamentos);
+
+        visita.getSintomas().addAll(sintomas);
+        visita.getMedicamentosEntregados().addAll(nuevos);
 
         return RegistroVisitaMapper.toDTO(visitaRepo.save(visita));
     }
@@ -143,4 +206,5 @@ public class RegistroVisitaServiceImpl implements RegistroVisitaService {
         visita.setEstado(estado);
         visitaRepo.save(visita);
     }
+
 }
