@@ -15,6 +15,9 @@ public class MedicamentoSuministradoMapper {
         dto.setVisitaId(entity.getVisita().getId());
         dto.setCantidadSuministrada(entity.getCantidadSuministrada());
         dto.setFechaCreacion(entity.getFechaCreacion().toLocalDate());
+        dto.setFechaActualizacion(entity.getFechaActualizacion() != null
+                ? entity.getFechaActualizacion().toLocalDate()
+                : null);
         return dto;
     }
 

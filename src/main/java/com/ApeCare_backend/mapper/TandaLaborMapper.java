@@ -20,8 +20,6 @@ public class TandaLaborMapper {
                 : tanda.getFechaCreacion().toLocalDate();
 
         dto.setFechaActualizacion(fechaActualizacion);
-
-        // Asignar el número de médicos
         dto.setMedicosAsignados(medicosAsignados);
 
         return dto;

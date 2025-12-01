@@ -9,5 +9,6 @@ public interface MedicamentoSuministradoService {
     MedicamentoSuministradoDTO crear(MedicamentoSuministradoDTO dto);
     List<MedicamentoSuministradoDTO> listarActivos();
     void eliminar(Long id, Long estadoId);
+    MedicamentoSuministradoDTO editar(Long id, MedicamentoSuministradoDTO dto);
 
 }

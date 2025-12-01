@@ -30,4 +30,9 @@ public class RegistroVisitaSintomaController {
         service.eliminar(id, estadoId);
     }
 
+    @PutMapping("/{id}")
+    public RegistroVisitaSintomaDTO editar(@PathVariable Long id, @RequestBody RegistroVisitaSintomaDTO dto) {
+        return service.editar(id, dto);
+    }
+
 }

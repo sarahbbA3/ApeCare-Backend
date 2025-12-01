@@ -21,7 +21,7 @@ public class RegistroVisitaDTO {
     private String recomendaciones;
     private LocalDate fechaRegistro;
     private List<Long> sintomasIds;
-    private List<Long> medicamentosIds;
+    private List<MedicamentoSuministradoDTO> medicamentos;
     private Long pacienteId;
     private Long medicoId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
