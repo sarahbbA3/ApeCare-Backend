@@ -27,7 +27,11 @@ public class MedicamentoServiceImpl implements MedicamentoService {
         TipoFarmaco tipo = tipoRepo.findById(dto.getTipoFarmacoId()).orElseThrow();
         Ubicacion ubicacion = ubicacionRepo.findById(dto.getUbicacionId()).orElseThrow();
         Marca marca = marcaRepo.findById(dto.getMarcaId()).orElseThrow();
-
+        //no mas de tres por ubi
+        long count = medicamentoRepo.countByUbicacionIdAndEstadoNombreIgnoreCase(ubicacion.getId(), "ACTIVO");
+        if (count >= 3) {
+            throw new RuntimeException("No se pueden agregar más de 3 medicamentos en esta ubicación");
+        }
         Medicamento medicamento = MedicamentoMapper.toEntity(dto, tipo, ubicacion, marca, estado);
         return MedicamentoMapper.toDTO(medicamentoRepo.save(medicamento));
     }
@@ -38,6 +42,13 @@ public class MedicamentoServiceImpl implements MedicamentoService {
         TipoFarmaco tipo = tipoRepo.findById(dto.getTipoFarmacoId()).orElseThrow();
         Ubicacion ubicacion = ubicacionRepo.findById(dto.getUbicacionId()).orElseThrow();
         Marca marca = marcaRepo.findById(dto.getMarcaId()).orElseThrow();
+        //validación si se cambia de ubicación
+        if (!existente.getUbicacion().getId().equals(ubicacion.getId())) {
+            long count = medicamentoRepo.countByUbicacionIdAndEstadoNombreIgnoreCase(ubicacion.getId(), "ACTIVO");
+            if (count >= 3) {
+                throw new RuntimeException("No se pueden agregar más de 3 medicamentos en esta ubicación");
+            }
+        }
 
         existente.setDescripcion(dto.getDescripcion());
         existente.setDosis(dto.getDosis());

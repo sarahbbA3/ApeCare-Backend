@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MedicamentoRepository extends JpaRepository<Medicamento, Long> {
     List<Medicamento> findByEstadoNombreIgnoreCase(String estado);
+    long countByUbicacionIdAndEstadoNombreIgnoreCase(Long ubicacionId, String estado);
 }
